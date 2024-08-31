@@ -36,7 +36,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title }) => {
         <Text className="font-bold text-2xl text-gray-800 mr-6">{title}</Text>
         <View className="flex-row justify-center items-center mr-2">
           <Text className="font-semibold uppercase text-lg text-gray-600 mr-2">
-            Xin chào, Phương
+            Xin chào, Khiêm
           </Text>
           <MaterialCommunityIcons
             name="hand-peace"
