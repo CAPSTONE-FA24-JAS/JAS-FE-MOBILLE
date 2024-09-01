@@ -1,14 +1,13 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import thunkMiddleware from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./slices/authSlice";
 
-// Import your reducers here
-
-// Combine your reducers
-const rootReducer = combineReducers({
-  // Add your reducers here
+const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
 });
 
-// Create the store
-// const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-// export default store;
+export default store;

@@ -1,7 +1,8 @@
-// /app/_layout.tsx
+// app/_layout.tsx
+
 import TimerProvider from "@/context/TimerContext";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -9,26 +10,23 @@ import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Colors from "@/constants/Colors";
 import CustomHeader from "@/components/CustomHeader";
-import CustomDrawerContent from "@/components/CustomDrawerContent"; // Import your custom drawer content
+import CustomDrawerContent from "@/components/CustomDrawerContent";
+import { Provider, useSelector } from "react-redux";
+import store, { RootState } from "@/redux/store";
+import Login from "./(tabs)/login";
 
 const Drawer = createDrawerNavigator();
 const NativeStack = createNativeStackNavigator();
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const [fontsLoaded, error] = useFonts({
-    "Roboto-Mono": require("../assets/fonts/RobotoMono-Regular.ttf"),
-  });
-
-  useEffect(() => {
-    if (error) throw error;
-    if (fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded, error]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
+// This function should be within the Provider
+function MainNavigator() {
+  // Check if the user is authenticated inside a component wrapped by the Provider
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  console.log("isAuthenticated", isAuthenticated);
 
   function MyDrawer() {
     return (
@@ -38,15 +36,15 @@ export default function RootLayout() {
           header: ({ route }) => {
             const routeName = route.name;
             const title =
-              route.name === "home-screen"
+              routeName === "home-screen"
                 ? "Home"
-                : route.name === "list-dish"
+                : routeName === "list-dish"
                 ? "Menu"
-                : route.name === "history-order"
+                : routeName === "history-order"
                 ? "Lịch sử đặt món"
-                : route.name === "feedback"
+                : routeName === "feedback"
                 ? "Đánh giá"
-                : route.name === "setting"
+                : routeName === "setting"
                 ? "Cài đặt"
                 : "Lịch sử đặt món"; // Fallback title if route doesn't match
             return <CustomHeader title={title} />;
@@ -114,30 +112,47 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <TimerProvider>
-        <NativeStack.Navigator>
-          <NativeStack.Screen
-            name="index"
-            component={require("./index").default}
-            options={{ headerShown: false }}
-          />
-          <NativeStack.Screen
-            name="(tabs)"
-            component={MyDrawer}
-            options={{ headerShown: false }}
-          />
-          <NativeStack.Screen
-            name="meditate/[id]"
-            component={require("./meditate/[id]").default}
-            options={{ headerShown: false }}
-          />
-          <NativeStack.Screen
-            name="(modal)/adjust-meditation-duration"
-            component={require("./(modal)/adjust-meditation-duration").default}
-            options={{ headerShown: false, presentation: "modal" }}
-          />
-        </NativeStack.Navigator>
-      </TimerProvider>
+      {isAuthenticated ? (
+        <TimerProvider>
+          <NativeStack.Navigator>
+            {/* Always render the index screen first */}
+            <NativeStack.Screen
+              name="index"
+              component={require("./index").default}
+              options={{ headerShown: false }}
+            />
+
+            <NativeStack.Screen
+              name="(tabs)"
+              component={MyDrawer}
+              options={{ headerShown: false }}
+            />
+          </NativeStack.Navigator>
+        </TimerProvider>
+      ) : (
+        <Login />
+      )}
     </SafeAreaProvider>
+  );
+}
+
+export default function RootLayout() {
+  const [fontsLoaded, error] = useFonts({
+    "Roboto-Mono": require("../assets/fonts/RobotoMono-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (error) throw error;
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <Provider store={store}>
+      <MainNavigator />
+    </Provider>
   );
 }
