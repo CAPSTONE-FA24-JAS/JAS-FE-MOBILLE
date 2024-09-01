@@ -1,24 +1,15 @@
-import {
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  useWindowDimensions,
-  Dimensions,
-} from "react-native";
+// app/index.tsx
+
 import React from "react";
+import { View, ImageBackground, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import CustomButton from "@/components/CustomButton";
 import AppGradient from "@/components/AppGradient";
 import { useRouter } from "expo-router";
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  withSpring,
-} from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
-import beachImage from "../assets/meditation-images/bg-restaurant.jpg";
+import beachImage from "../assets/bg-jas/bg1.png";
 import { NativeWindStyleSheet } from "nativewind";
 
 NativeWindStyleSheet.setOutput({
@@ -27,13 +18,19 @@ NativeWindStyleSheet.setOutput({
 
 const App = () => {
   const router = useRouter();
-
   const { width, height } = Dimensions.get("window");
-  console.log(`Width: ${width}, Height: ${height}`);
 
   const isLandscape = width > height;
 
-  console.log("isLandscape", isLandscape);
+  const handleExplorePress = () => {
+    console.log("Button Pressed");
+    try {
+      router.push("./home-screen");
+      console.log("Navigating to /login");
+    } catch (error) {
+      console.error("Navigation error:", error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -42,33 +39,30 @@ const App = () => {
         resizeMode="cover"
         style={{ flex: 1, width: "100%", height: "100%" }}
       >
-        <AppGradient
-          // Background Linear Gradient
-          colors={["rgba(0,0,0,0.4)", "rgba(0,0,0,0.8)"]}
-        >
-          <SafeAreaView className="flex flex-1 px-1 justify-between">
+        <AppGradient colors={["rgba(0,0,0,0)", "rgba(0,0,0,0)"]}>
+          <SafeAreaView
+            style={{
+              flex: 1,
+              paddingHorizontal: 8,
+              justifyContent: "space-between",
+            }}
+          >
             <Animated.View
               entering={FadeInDown.delay(300)
                 .mass(0.5)
                 .stiffness(80)
                 .springify(20)}
-            >
-              <Text className="text-center text-white font-bold text-4xl">
-                Nhà Hàng LOGO Xin Kinh Chào Quý Khách!
-              </Text>
-              <Text className="text-center text-white font-regular text-2xl mt-3">
-                Đến đây để thưởng thức những điều tuyệt vời nhất
-              </Text>
-            </Animated.View>
+            ></Animated.View>
 
             <Animated.View
               entering={FadeInDown.delay(300)
                 .mass(0.5)
                 .stiffness(80)
                 .springify(20)}
+              style={{ marginBottom: 40, shadowOpacity: 0.8 }}
             >
               <CustomButton
-                onPress={() => router.push("/home-screen")}
+                onPress={handleExplorePress}
                 title="BẮT ĐẦU KHÁM PHÁ"
               />
             </Animated.View>
