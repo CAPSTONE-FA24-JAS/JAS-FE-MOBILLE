@@ -7,4 +7,6 @@ const apiClient = axios.create({
   headers: apiConfig.headers,
 });
 
+console.log("apiClient.baseURL:", apiConfig.baseURL);
+
 export default apiClient;
