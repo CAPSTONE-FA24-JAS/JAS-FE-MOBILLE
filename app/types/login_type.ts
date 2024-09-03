@@ -1,16 +1,31 @@
 // types/authTypes.ts
 
-export interface UserResponse {
-  userId: string;
-  userName: string;
+export interface UserAccount {
+  firstName: string;
+  lastName: string;
+  profilePicture: any;
   email: string;
-  roles: string[];
-  // Add other properties as needed
+  gender: string;
+  address: any;
+  passwordHash: string;
+  status: boolean;
+  phoneNumber: string;
+  confirmationToken: string;
+  isConfirmed: boolean;
+  vnPayAccount: any;
+  vnPayBankCode: any;
+  vnPayAccountName: any;
+  roleId: number;
+  roleName: any;
 }
-
+export interface Data {
+  account: UserAccount;
+  accessToken: string;
+}
 export interface LoginResponse {
-  result: {
-    token: string;
-    userResponse: UserResponse;
-  };
+  code: number;
+  message: string;
+  isSuccess: boolean;
+  data: Data;
+  errorMessages: any;
 }

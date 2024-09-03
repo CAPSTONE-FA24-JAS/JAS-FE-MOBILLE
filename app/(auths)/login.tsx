@@ -19,6 +19,10 @@ import { Feather } from "@expo/vector-icons";
 import beachImage from "../../assets/bg-jas/header_login.png";
 import ggIcon from "../../assets/icons/gg-icon.png";
 import fbIcon from "../../assets/icons/fb-icon.png";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "@/components/FlashMessageHelpers";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -29,15 +33,22 @@ const Login: React.FC = () => {
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const router = useRouter();
 
+  console.log("====================================");
+  console.log("data input", username, password);
+  console.log("====================================");
   const handleLogin = async () => {
+    if (!username || !password) {
+      showErrorMessage("Please fill in all fields");
+      return;
+    }
     try {
-      console.log("Attempting to login..."); // Debug log
       await LoginApi(username, password, dispatch);
       setIsLoginSuccessful(true);
+      showSuccessMessage("Login successful! Redirecting...");
       console.log("Login successful, navigating to home..."); // Debug log
-      // router.push("/index");
     } catch (error) {
-      Alert.alert("Login Error", "Invalid username or password.");
+      showErrorMessage("Invalid username or password.");
+      console.error("Login error:", error);
     }
   };
 
