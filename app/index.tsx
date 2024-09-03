@@ -25,7 +25,7 @@ const App = () => {
   const handleExplorePress = () => {
     console.log("Button Pressed");
     try {
-      router.push("./home-screen");
+      router.push("/(auths)/login");
       console.log("Navigating to /login");
     } catch (error) {
       console.error("Navigation error:", error);
