@@ -1,6 +1,6 @@
-// app/(tabs)/login.tsx
+// app/(auths)/login.tsx
 
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -26,9 +26,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [rightIcon, setRightIcon] = useState<"eye" | "eye-off">("eye"); // Explicitly type the state
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
-
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -124,11 +122,13 @@ const Login: React.FC = () => {
               <Text className="text-lg text-gray-500">
                 Don’t have an account?
               </Text>
-              <TouchableOpacity onPress={() => router.push("/register")}>
-                <Text className="text-[#4765F9] text-lg font-semibold  mx-4">
-                  Sign up
-                </Text>
-              </TouchableOpacity>
+              <Link href="/(auths)/register" asChild>
+                <TouchableOpacity>
+                  <Text className="text-[#4765F9] text-lg font-semibold mx-4">
+                    Sign up
+                  </Text>
+                </TouchableOpacity>
+              </Link>
             </View>
           </View>
         </View>
