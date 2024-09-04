@@ -1,4 +1,5 @@
 import { signup } from "@/redux/actions/authAction";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -104,9 +105,11 @@ const SignUpScreen = () => {
               Create Account
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="mt-4">
-            <Text className="text-center text-blue-500">Log in instead</Text>
-          </TouchableOpacity>
+          <Link href="/(auths)/login" asChild>
+            <TouchableOpacity className="mt-4">
+              <Text className="text-center text-blue-500">Log in instead</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </SafeAreaView>
