@@ -1,9 +1,13 @@
 // authApi.ts
 
 import { LoginResponse } from "@/app/types/login_type";
+import { Response } from "@/app/types/respone_type";
+import { DataSignUpResponse, SignUpUser } from "@/app/types/signup_type";
+import { showErrorMessage } from "@/components/FlashMessageHelpers";
 import { login, register } from "@/redux/slices/authSlice";
 import { AppDispatch } from "@/redux/store";
 import axios from "axios";
+import { router } from "expo-router";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:7251";
 
@@ -61,29 +65,36 @@ export const LoginApi = async (
 };
 
 export const registerApi = async (
-  email: string,
-  password: string,
+  signupUser: SignUpUser,
   dispatch: AppDispatch
 ): Promise<void> => {
   try {
-    console.log("Starting registration..."); // Debug log
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("Starting registration...", signupUser);
 
-    const response = mockRegisterResponse;
-    const { user } = response;
+    const url = `${API_URL}/api/Authentication/Register`;
+    const response = await axios.post<Response<DataSignUpResponse>>(
+      url,
+      signupUser
+    );
 
-    // console.log("Dispatching register..."); // Debug log
-    // dispatch(
-    //   register({
-    //     userId: user.userId,
-    //     userName: user.userName,
-    //     email: user.email,
-    //     roles: user.roles,
-    //   })
-    // );
-    console.log("Registration dispatched successfully."); // Debug log
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
+    if (response.data.isSuccess === true) {
+      console.log("Registration successful. Redirecting to login...");
+      router.push("/login"); // Chuyển hướng đến trang đăng nhập
+    } else {
+      // Nếu đăng ký không thành công, ném ra lỗi với thông báo từ API
+      throw new Error(response.data.message || "Registration failed.");
+    }
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      const apiResponse = error.response.data as Response<any>;
+      console.error("Registration error:", apiResponse.message);
+      throw new Error(apiResponse.message || "An unexpected error occurred.");
+    } else if (error instanceof Error) {
+      console.error("Registration error:", error.message);
+      throw error;
+    } else {
+      console.error("Unexpected error:", error);
+      throw new Error("An unexpected error occurred.");
+    }
   }
 };
