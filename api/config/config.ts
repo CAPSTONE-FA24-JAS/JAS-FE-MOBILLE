@@ -1,6 +1,6 @@
 // src/api/config.ts
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 console.log("API_URL:", API_URL); // Check if API_URL is defined
 
 if (!API_URL) {

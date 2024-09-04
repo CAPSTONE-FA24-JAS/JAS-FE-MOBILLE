@@ -1,3 +1,4 @@
+import { signup } from "@/redux/actions/authAction";
 import React, { useState } from "react";
 import {
   View,
@@ -9,8 +10,12 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { SignUpUser } from "../types/signup_type";
+import { useAppDispatch } from "@/redux/store";
 
 const SignUpScreen = () => {
+  const dispatch = useAppDispatch();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +23,14 @@ const SignUpScreen = () => {
   const [retypePasscode, setRetypePasscode] = useState("");
 
   const handleRegister = () => {
+    const signupUser: SignUpUser = {
+      firstName,
+      lastName,
+      email,
+      password: passcode,
+      gender: "male",
+      phoneNumber: "0964649391",
+    };
     if (!firstName || !lastName || !email || !passcode || !retypePasscode) {
       Alert.alert("Error", "Please fill in all fields");
       return;
@@ -28,10 +41,7 @@ const SignUpScreen = () => {
     }
 
     // Logic xử lý khi nhấn nút Submit
-    Alert.alert(
-      "Success",
-      `Account created for ${firstName} ${lastName} with email ${email}`
-    );
+    dispatch(signup(signupUser));
   };
 
   return (
