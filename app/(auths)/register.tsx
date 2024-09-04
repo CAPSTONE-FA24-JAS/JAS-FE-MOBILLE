@@ -27,15 +27,23 @@ const SignUpScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [passcode, setPasscode] = useState("");
-  const [retypePasscode, setRetypePasscode] = useState("");
+  const [password, setPassword] = useState("");
+  const [retypePassword, setRetypePassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleRegister = async () => {
-    if (!firstName || !lastName || !email || !passcode || !retypePasscode) {
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !retypePassword ||
+      !phoneNumber
+    ) {
       showErrorMessage("Error, Please fill in all fields");
       return;
     }
-    if (passcode !== retypePasscode) {
+    if (password !== retypePassword) {
       showErrorMessage("Error, Passwords do not match");
       return;
     }
@@ -44,9 +52,9 @@ const SignUpScreen = () => {
       firstName,
       lastName,
       email,
-      password: passcode,
+      passwordHash: password,
       gender: "male",
-      phoneNumber: "0964649391",
+      phoneNumber,
     };
 
     try {
@@ -76,10 +84,9 @@ const SignUpScreen = () => {
       <View className="flex-1">
         <ImageBackground
           source={require("../../assets/Vector-11.png")}
-          className="relative justify-end w-full h-64"
-        >
-          <Text className="absolute mb-4 ml-4 text-3xl font-bold text-white top-20 left-32">
-            Sparkles
+          className="relative justify-end w-full h-64">
+          <Text className="absolute mb-4 ml-4 text-3xl font-bold text-white top-20 left-40">
+            JAS
           </Text>
           <Image
             className="absolute bottom-0 w-32 h-32 top-28 right-32"
@@ -103,6 +110,13 @@ const SignUpScreen = () => {
           />
           <TextInput
             className="w-full h-10 px-2 mb-4 border border-gray-300 rounded"
+            placeholder="Phone Number"
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="email-address"
+          />
+          <TextInput
+            className="w-full h-10 px-2 mb-4 border border-gray-300 rounded"
             placeholder="E-Mail Address"
             value={email}
             onChangeText={setEmail}
@@ -110,9 +124,9 @@ const SignUpScreen = () => {
           />
           <TextInput
             className="w-full h-10 px-2 mb-1 border border-gray-300 rounded"
-            placeholder="Passcode"
-            value={passcode}
-            onChangeText={setPasscode}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
             secureTextEntry
           />
           <Text className="mb-4 text-xs text-gray-500">
@@ -120,15 +134,14 @@ const SignUpScreen = () => {
           </Text>
           <TextInput
             className="w-full h-10 px-2 mb-4 border border-gray-300 rounded"
-            placeholder="Re-type Passcode"
-            value={retypePasscode}
-            onChangeText={setRetypePasscode}
+            placeholder="Re-type Password"
+            value={retypePassword}
+            onChangeText={setRetypePassword}
             secureTextEntry
           />
           <TouchableOpacity
             className="w-full py-3 mt-4 bg-blue-500 rounded"
-            onPress={handleRegister}
-          >
+            onPress={handleRegister}>
             <Text className="text-base font-bold text-center text-white">
               Create Account
             </Text>
