@@ -14,6 +14,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { SignUpUser } from "../types/signup_type";
 import { useAppDispatch } from "@/redux/store";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "@/components/FlashMessageHelpers";
+import { registerApi } from "@/api/authApi";
+import axios from "axios";
+import { Response } from "../types/respone_type";
 
 const SignUpScreen = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +30,16 @@ const SignUpScreen = () => {
   const [passcode, setPasscode] = useState("");
   const [retypePasscode, setRetypePasscode] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if (!firstName || !lastName || !email || !passcode || !retypePasscode) {
+      showErrorMessage("Error, Please fill in all fields");
+      return;
+    }
+    if (passcode !== retypePasscode) {
+      showErrorMessage("Error, Passwords do not match");
+      return;
+    }
+
     const signupUser: SignUpUser = {
       firstName,
       lastName,
@@ -32,17 +48,27 @@ const SignUpScreen = () => {
       gender: "male",
       phoneNumber: "0964649391",
     };
-    if (!firstName || !lastName || !email || !passcode || !retypePasscode) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-    if (passcode !== retypePasscode) {
-      Alert.alert("Error", "Passwords do not match");
-      return;
-    }
 
-    // Logic xử lý khi nhấn nút Submit
-    dispatch(signup(signupUser));
+    try {
+      await registerApi(signupUser, dispatch); // Gọi hàm registerApi mới
+      showSuccessMessage("Register successful! Please log in to continue");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        // Kiểm tra nếu lỗi là từ Axios và chứa thông báo lỗi từ API
+        if (error.response && error.response.data) {
+          const apiResponse = error.response.data as Response<any>; // Ép kiểu cho dữ liệu phản hồi
+          showErrorMessage(
+            apiResponse.message || "An unexpected error occurred."
+          );
+        } else {
+          showErrorMessage(error.message);
+        }
+      } else if (error instanceof Error) {
+        showErrorMessage(error.message);
+      } else {
+        showErrorMessage("An unexpected error occurred.");
+      }
+    }
   };
 
   return (
@@ -50,7 +76,8 @@ const SignUpScreen = () => {
       <View className="flex-1">
         <ImageBackground
           source={require("../../assets/Vector-11.png")}
-          className="relative justify-end w-full h-64">
+          className="relative justify-end w-full h-64"
+        >
           <Text className="absolute mb-4 ml-4 text-3xl font-bold text-white top-20 left-32">
             Sparkles
           </Text>
@@ -100,7 +127,8 @@ const SignUpScreen = () => {
           />
           <TouchableOpacity
             className="w-full py-3 mt-4 bg-blue-500 rounded"
-            onPress={handleRegister}>
+            onPress={handleRegister}
+          >
             <Text className="text-base font-bold text-center text-white">
               Create Account
             </Text>
