@@ -72,15 +72,15 @@ export const registerApi = async (
     const response = mockRegisterResponse;
     const { user } = response;
 
-    console.log("Dispatching register..."); // Debug log
-    dispatch(
-      register({
-        userId: user.userId,
-        userName: user.userName,
-        email: user.email,
-        roles: user.roles,
-      })
-    );
+    // console.log("Dispatching register..."); // Debug log
+    // dispatch(
+    //   register({
+    //     userId: user.userId,
+    //     userName: user.userName,
+    //     email: user.email,
+    //     roles: user.roles,
+    //   })
+    // );
     console.log("Registration dispatched successfully."); // Debug log
   } catch (error) {
     console.error("Registration error:", error);

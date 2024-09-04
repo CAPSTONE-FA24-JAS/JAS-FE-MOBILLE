@@ -3,8 +3,8 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider, useSelector } from "react-redux";
-import store, { RootState } from "@/redux/store";
+import { Provider } from "react-redux";
+import store from "@/redux/store";
 import { Text, View } from "react-native";
 import FlashMessage from "react-native-flash-message";
 

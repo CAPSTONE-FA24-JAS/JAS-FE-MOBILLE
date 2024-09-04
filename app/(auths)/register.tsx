@@ -1,3 +1,4 @@
+import { signup } from "@/redux/actions/authAction";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -10,8 +11,12 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { SignUpUser } from "../types/signup_type";
+import { useAppDispatch } from "@/redux/store";
 
 const SignUpScreen = () => {
+  const dispatch = useAppDispatch();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,6 +24,14 @@ const SignUpScreen = () => {
   const [retypePasscode, setRetypePasscode] = useState("");
 
   const handleRegister = () => {
+    const signupUser: SignUpUser = {
+      firstName,
+      lastName,
+      email,
+      password: passcode,
+      gender: "male",
+      phoneNumber: "0964649391",
+    };
     if (!firstName || !lastName || !email || !passcode || !retypePasscode) {
       Alert.alert("Error", "Please fill in all fields");
       return;
@@ -29,10 +42,7 @@ const SignUpScreen = () => {
     }
 
     // Logic xử lý khi nhấn nút Submit
-    Alert.alert(
-      "Success",
-      `Account created for ${firstName} ${lastName} with email ${email}`
-    );
+    dispatch(signup(signupUser));
   };
 
   return (
@@ -40,8 +50,7 @@ const SignUpScreen = () => {
       <View className="flex-1">
         <ImageBackground
           source={require("../../assets/Vector-11.png")}
-          className="relative justify-end w-full h-64"
-        >
+          className="relative justify-end w-full h-64">
           <Text className="absolute mb-4 ml-4 text-3xl font-bold text-white top-20 left-32">
             Sparkles
           </Text>
@@ -91,8 +100,7 @@ const SignUpScreen = () => {
           />
           <TouchableOpacity
             className="w-full py-3 mt-4 bg-blue-500 rounded"
-            onPress={handleRegister}
-          >
+            onPress={handleRegister}>
             <Text className="text-base font-bold text-center text-white">
               Create Account
             </Text>
