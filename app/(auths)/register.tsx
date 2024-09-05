@@ -1,4 +1,3 @@
-import { signup } from "@/redux/actions/authAction";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -8,10 +7,8 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 import { SignUpUser } from "../types/signup_type";
 import { useAppDispatch } from "@/redux/store";
 import {
@@ -30,6 +27,7 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   const handleRegister = async () => {
     if (
@@ -58,13 +56,15 @@ const SignUpScreen = () => {
     };
 
     try {
-      await registerApi(signupUser, dispatch); // Gọi hàm registerApi mới
-      showSuccessMessage("Register successful! Please log in to continue");
+      setIsLoading(true); // Start loading
+      await registerApi(signupUser, dispatch); // Call the register API
+      showSuccessMessage(
+        "Register successful! Please check email to confirm account and log in to continue"
+      );
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        // Kiểm tra nếu lỗi là từ Axios và chứa thông báo lỗi từ API
         if (error.response && error.response.data) {
-          const apiResponse = error.response.data as Response<any>; // Ép kiểu cho dữ liệu phản hồi
+          const apiResponse = error.response.data as Response<any>;
           showErrorMessage(
             apiResponse.message || "An unexpected error occurred."
           );
@@ -76,6 +76,8 @@ const SignUpScreen = () => {
       } else {
         showErrorMessage("An unexpected error occurred.");
       }
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -139,13 +141,18 @@ const SignUpScreen = () => {
             onChangeText={setRetypePassword}
             secureTextEntry
           />
+
           <TouchableOpacity
-            className="w-full py-3 mt-4 bg-blue-500 rounded"
+            disabled={isLoading} // Disable button when loading
+            className={`w-full py-3 mt-4 bg-blue-500 rounded ${
+              isLoading ? "opacity-50" : ""
+            }`}
             onPress={handleRegister}>
             <Text className="text-base font-bold text-center text-white">
               Create Account
             </Text>
           </TouchableOpacity>
+
           <Link href="/(auths)/login" asChild>
             <TouchableOpacity className="mt-4">
               <Text className="text-center text-blue-500">Log in instead</Text>

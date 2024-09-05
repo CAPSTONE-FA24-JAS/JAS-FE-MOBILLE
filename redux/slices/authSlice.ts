@@ -1,20 +1,22 @@
 // redux/slices/authSlice.ts
 
-import { UserResponse } from "@/app/types/login_type";
+import { UserAccount } from "@/app/types/login_type";
 import { DataSignUpResponse } from "@/app/types/signup_type";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isPending, PayloadAction } from "@reduxjs/toolkit";
 import { FulfilledAction, PendingAction, RejectedAction } from "../reduxType";
 import { signup } from "../actions/authAction";
 
 interface AuthState {
   isAuthenticated: boolean;
   token?: string;
-  userResponse?: UserResponse; // Update this to match your types
+  userResponse?: UserAccount; // Update this to match your types
   signUpResponse?: DataSignUpResponse;
+  isPending?: boolean;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
+  isPending: false,
 };
 
 export const authSlice = createSlice({
@@ -23,7 +25,7 @@ export const authSlice = createSlice({
   reducers: {
     login: (
       state,
-      action: PayloadAction<{ token: string; userResponse: UserResponse }>
+      action: PayloadAction<{ token: string; userResponse: UserAccount }>
     ) => {
       state.isAuthenticated = true;
       state.token = action.payload.token;
@@ -40,13 +42,16 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(signup.fulfilled, (state, action) => {
+      state.isPending = false;
       console.log("data res", action.payload);
       state.signUpResponse = action.payload;
     });
     builder.addCase(signup.pending, (state) => {
+      state.isPending = true;
       console.log("pending");
     });
     builder.addCase(signup.rejected, (state, action) => {
+      state.isPending = false;
       console.log("rejected", action.error.message);
     });
   },

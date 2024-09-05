@@ -18,7 +18,7 @@ export const signup = createAsyncThunk(
         lastName: SignUpUser.lastName,
         email: SignUpUser.email,
         gender: "male",
-        passwordHash: SignUpUser.password,
+        passwordHash: SignUpUser.passwordHash,
         phoneNumber: SignUpUser.phoneNumber,
       });
 
