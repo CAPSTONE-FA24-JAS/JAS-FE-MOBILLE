@@ -1,15 +1,16 @@
-// app/(tabs)/_layout.tsx
-
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 import CustomHeader from "@/components/CustomHeader";
 
+// Declare Drawer and Stack Navigators
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
-export default function DrawerLayout() {
+function DrawerLayout() {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -31,8 +32,7 @@ export default function DrawerLayout() {
           return <CustomHeader title={title} />;
         },
         drawerActiveTintColor: Colors.primary,
-      }}
-    >
+      }}>
       <Drawer.Screen
         name="home-screen"
         component={require("./home-screen").default}
@@ -88,5 +88,31 @@ export default function DrawerLayout() {
         }}
       />
     </Drawer.Navigator>
+  );
+}
+
+export default function AppNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DrawerLayout"
+        component={DrawerLayout}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="bidding-auction"
+        component={require("./bidding-auction").default}
+        options={{
+          title: "Auction Detail",
+        }}
+      />
+      <Stack.Screen
+        name="lot-detail"
+        component={require("./lot-detail").default}
+        options={{
+          title: "Auction Detail",
+        }}
+      />
+    </Stack.Navigator>
   );
 }
