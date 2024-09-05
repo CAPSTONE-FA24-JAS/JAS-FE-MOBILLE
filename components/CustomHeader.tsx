@@ -23,6 +23,11 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title }) => {
         paddingTop: 40,
         paddingBottom: 20,
         justifyContent: "space-between",
+        shadowColor: "#000", // Màu của shadow
+        shadowOffset: { width: 0, height: 2 }, // Offset của shadow
+        shadowOpacity: 0.25, // Độ mờ của shadow
+        shadowRadius: 3.84, // Bán kính của shadow
+        elevation: 5, // Độ cao của shadow (Android)
       }}
     >
       <TouchableOpacity

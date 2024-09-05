@@ -33,9 +33,6 @@ const Login: React.FC = () => {
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const router = useRouter();
 
-  console.log("====================================");
-  console.log("data input", username, password);
-  console.log("====================================");
   const handleLogin = async () => {
     if (!username || !password) {
       showErrorMessage("Please fill in all fields");
