@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-const HistoryOrder: React.FC = () => {
+const MyAccount = () => {
   return (
     <View>
-      <Text>History Order</Text>
+      <Text>Past Auctions Screen</Text>
     </View>
   );
 };
 
-export default HistoryOrder;
+export default MyAccount;

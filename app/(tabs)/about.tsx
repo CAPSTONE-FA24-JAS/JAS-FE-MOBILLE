@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-const ListDish: React.FC = () => {
+const AboutScreen = () => {
   return (
     <View>
-      <Text>List Dish Component</Text>
+      <Text>About Screen</Text>
     </View>
   );
 };
 
-export default ListDish;
+export default AboutScreen;
