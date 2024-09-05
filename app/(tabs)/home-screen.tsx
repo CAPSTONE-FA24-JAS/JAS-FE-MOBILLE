@@ -1,24 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, Button } from "react-native";
+import { useRouter } from "expo-router";
+import ItemAuctionHomePage from "@/components/ItemAuctionHomePage";
+import ItemLots from "@/components/ItemLots";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const HomeScreen: React.FC = () => {
+const HomeScreen = () => {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Welcome to the Home Screen!</Text>
-    </View>
+    <ScrollView>
+      <View className="items-center flex-1">
+        <ItemAuctionHomePage />
+        <ItemAuctionHomePage />
+        <ItemAuctionHomePage />
+      </View>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});
 
 export default HomeScreen;
