@@ -24,6 +24,8 @@ import RateUs from "./rate-us";
 import LotDetailScreen from "./lot-detail";
 import CustomDrawerContent from "@/components/Navigator/CustomDrawerContent";
 import BiddingAuction from "./bidding-auction";
+import ConsignStep from "@/components/Pages/ConsignStep";
+import CustomHeaderDetail from "@/components/CustomHeaderDetail";
 
 // Declare Drawer and Stack Navigators
 const Drawer = createDrawerNavigator();
@@ -87,6 +89,13 @@ function MyAccountStack() {
         name="FinanceProof"
         component={FinanceProof}
         options={{ header: () => <CustomHeader title="Finance Proof" /> }}
+      />
+      <Stack.Screen
+        name="ConsignStep"
+        component={ConsignStep}
+        options={{
+          header: () => <CustomHeaderDetail title="Consignment Step" />,
+        }}
       />
     </Stack.Navigator>
   );
