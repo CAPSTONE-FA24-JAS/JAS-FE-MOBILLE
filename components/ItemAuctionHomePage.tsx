@@ -5,6 +5,9 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 const ItemAuctionHomePage = () => {
   const router = useRouter();
   const goToAuctionDetail = () => {
+    console.log("====================================");
+    console.log("Go to auction detail page");
+    console.log("====================================");
     router.push("/(tabs)/bidding-auction"); // Path to your auction detail page
   };
   return (

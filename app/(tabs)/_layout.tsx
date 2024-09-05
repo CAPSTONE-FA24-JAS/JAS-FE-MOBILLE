@@ -1,89 +1,158 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import CustomDrawerContent from "@/components/CustomDrawerContent";
+// import CustomDrawerContent from "@/components/CustomDrawerContent";
 import CustomHeader from "@/components/CustomHeader";
+import HomeScreen from "./home-screen";
+import PastAuctions from "./past-auctions";
+import MyAccount from "./my-account";
+import Consign from "./consign";
+import HistoryItemConsign from "./history-item-consign";
+import WatchedLots from "./watched-lots";
+import MyBids from "./my-bids";
+import PastBids from "./past-bids";
+import FinanceProof from "./finance-proof";
+import TermsConditions from "./terms-conditions";
+import AboutScreen from "./about";
+import RateUs from "./rate-us";
+import LotDetailScreen from "./lot-detail";
+import CustomDrawerContent from "@/components/Navigator/CustomDrawerContent";
+import BiddingAuction from "./bidding-auction";
 
 // Declare Drawer and Stack Navigators
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
+// Stack Navigator for Auctions
+function AuctionsStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomePage"
+        component={HomeScreen}
+        options={{ header: () => <CustomHeader title="Home Page" /> }}
+      />
+      <Stack.Screen
+        name="PastAuctions"
+        component={PastAuctions}
+        options={{ header: () => <CustomHeader title="Past Auctions" /> }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Stack Navigator for My Account
+function MyAccountStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="MyAccount"
+        component={MyAccount}
+        options={{ header: () => <CustomHeader title="My Account" /> }}
+      />
+      <Stack.Screen
+        name="ConsignItem"
+        component={Consign}
+        options={{ header: () => <CustomHeader title="Consign An Item" /> }}
+      />
+      <Stack.Screen
+        name="HistoryItemConsign"
+        component={HistoryItemConsign}
+        options={{
+          header: () => <CustomHeader title="History Item Consign" />,
+        }}
+      />
+      <Stack.Screen
+        name="WatchedLots"
+        component={WatchedLots}
+        options={{ header: () => <CustomHeader title="Watched Lots" /> }}
+      />
+      <Stack.Screen
+        name="MyBids"
+        component={MyBids}
+        options={{ header: () => <CustomHeader title="My Bids" /> }}
+      />
+      <Stack.Screen
+        name="PastBids"
+        component={PastBids}
+        options={{ header: () => <CustomHeader title="Past Bids" /> }}
+      />
+      <Stack.Screen
+        name="FinanceProof"
+        component={FinanceProof}
+        options={{ header: () => <CustomHeader title="Finance Proof" /> }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Stack Navigator for About
+function AboutStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="TermsConditionsScreen"
+        component={TermsConditions}
+        options={{ header: () => <CustomHeader title="Terms & Conditions" /> }}
+      />
+      <Stack.Screen
+        name="AboutScreenMain"
+        component={AboutScreen}
+        options={{ header: () => <CustomHeader title="About" /> }}
+      />
+      <Stack.Screen
+        name="RateUsScreen"
+        component={RateUs}
+        options={{ header: () => <CustomHeader title="Rate Us" /> }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Main Drawer Layout
 function DrawerLayout() {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        header: ({ route }) => {
-          const routeName = route.name;
-          const title =
-            routeName === "home-screen"
-              ? "Home"
-              : routeName === "list-dish"
-              ? "Menu"
-              : routeName === "history-order"
-              ? "Lịch sử đặt món"
-              : routeName === "feedback"
-              ? "Đánh giá"
-              : routeName === "setting"
-              ? "Cài đặt"
-              : "Lịch sử đặt món"; // Fallback title if route doesn't match
-          return <CustomHeader title={title} />;
-        },
+        headerShown: false, // Hide default header
         drawerActiveTintColor: Colors.primary,
-      }}>
+      }}
+    >
+      {/* Parent Categories */}
       <Drawer.Screen
-        name="home-screen"
-        component={require("./home-screen").default}
+        name="Auctions"
+        component={AuctionsStack}
         options={{
-          drawerLabel: "HOME",
+          drawerLabel: "Auctions",
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="flower-tulip"
-              size={24}
-              color={color}
-            />
+            <MaterialCommunityIcons name="gavel" size={24} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="list-dish"
-        component={require("./list-dish").default}
+        name="Account"
+        component={MyAccountStack}
         options={{
-          drawerLabel: "MENU",
+          drawerLabel: "My Account",
           drawerIcon: ({ color }) => (
-            <Entypo name="open-book" size={24} color={color} />
+            <FontAwesome name="user" size={24} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="history-order"
-        component={require("./history-order").default}
+        name="About"
+        component={AboutStack}
         options={{
-          drawerLabel: "LỊCH SỬ ĐẶT MÓN",
+          drawerLabel: "About",
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="history" size={24} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="feedback"
-        component={require("./feedback").default}
-        options={{
-          drawerLabel: "ĐÁNH GIÁ",
-          drawerIcon: ({ color }) => (
-            <Entypo name="star" size={24} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="setting"
-        component={require("./setting").default}
-        options={{
-          drawerLabel: "CÀI ĐẶT",
-          drawerIcon: ({ color }) => (
-            <Entypo name="cog" size={24} color={color} />
+            <FontAwesome name="info-circle" size={24} color={color} />
           ),
         }}
       />
@@ -99,6 +168,8 @@ export default function AppNavigator() {
         component={DrawerLayout}
         options={{ headerShown: false }}
       />
+      {/* Additional Stack Screens */}
+
       <Stack.Screen
         name="bidding-auction"
         component={require("./bidding-auction").default}
