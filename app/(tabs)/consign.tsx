@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-const Feedback = () => {
+const Consign = () => {
   return (
     <View>
-      <Text>Feedback Screen</Text>
+      <Text>Consign Component</Text>
     </View>
   );
 };
 
-export default Feedback;
+export default Consign;

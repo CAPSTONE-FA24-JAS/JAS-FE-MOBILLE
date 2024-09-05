@@ -32,19 +32,19 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title }) => {
         <MaterialCommunityIcons name="menu" size={24} color="black" />
       </TouchableOpacity>
 
-      <View className="flex-row items-center flex-1">
-        <Text className="font-bold text-2xl text-gray-800 mr-6">{title}</Text>
-        <View className="flex-row justify-center items-center mr-2">
-          <Text className="font-semibold uppercase text-lg text-gray-600 mr-2">
-            Xin chào, Khiêm
-          </Text>
+      <View className="flex-row justify-between items-center flex-1 w-full">
+        <Text className="font-bold text-2xl text-gray-800 mr-6 w-[80%] text-center">
+          {title}
+        </Text>
+
+        <TouchableOpacity className="justify-end flex-row">
           <MaterialCommunityIcons
-            name="hand-peace"
-            size={20}
+            name="bell"
+            size={30}
             color="black"
             style={{ marginRight: 10 }}
           />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
