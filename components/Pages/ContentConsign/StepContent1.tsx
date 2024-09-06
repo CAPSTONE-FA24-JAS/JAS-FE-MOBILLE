@@ -1,12 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { showErrorMessage } from "@/components/FlashMessageHelpers";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const StepContent1: React.FC = () => {
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+interface StepContent1Props {
+  selectedImages: string[];
+  setSelectedImages: (images: string[]) => void;
+}
 
-  // Handle Image Picker
-  const pickImage = async () => {
+const StepContent1: React.FC<StepContent1Props> = ({
+  selectedImages,
+  setSelectedImages,
+}) => {
+  useEffect(() => {
+    const getPermission = async () => {
+      const { status: cameraStatus } =
+        await ImagePicker.requestCameraPermissionsAsync();
+      const { status: galleryStatus } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (cameraStatus !== "granted" || galleryStatus !== "granted") {
+        showErrorMessage(
+          "Permissions Required, Permissions to access camera and gallery are required!"
+        );
+      }
+    };
+    getPermission();
+  }, []);
+
+  // Handle Camera Picker
+  const pickImageFromCamera = async () => {
+    const { status: cameraStatus } =
+      await ImagePicker.requestCameraPermissionsAsync();
+    const { status: galleryStatus } =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (cameraStatus !== "granted" || galleryStatus !== "granted") {
+      showErrorMessage("Permissions Required for Camera and Gallery access.");
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      quality: 1,
+    });
+
+    if (!result.canceled && selectedImages.length < 4) {
+      setSelectedImages([...selectedImages, result.assets[0].uri]);
+    }
+  };
+
+  // Handle Image Picker from Gallery
+  const pickImageFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: false,
@@ -16,6 +63,12 @@ const StepContent1: React.FC = () => {
     if (!result.canceled && selectedImages.length < 4) {
       setSelectedImages([...selectedImages, result.assets[0].uri]);
     }
+  };
+
+  // Remove image from the list
+  const removeImage = (index: number) => {
+    const updatedImages = selectedImages.filter((_, i) => i !== index);
+    setSelectedImages(updatedImages);
   };
 
   return (
@@ -28,20 +81,39 @@ const StepContent1: React.FC = () => {
 
       <View className="flex-row flex-wrap justify-around mt-6">
         {selectedImages.map((uri, index) => (
-          <Image
-            key={index}
-            source={{ uri }}
-            className="w-24 h-24 rounded-lg"
-          />
+          <View key={index} className="relative">
+            <Image source={{ uri }} className="w-24 h-24 rounded-lg" />
+            <TouchableOpacity
+              onPress={() => removeImage(index)}
+              className="absolute top-0 right-0 bg-gray-700 rounded-full w-6 h-6 justify-center items-center"
+            >
+              <Text className="text-white font-bold">X</Text>
+            </TouchableOpacity>
+          </View>
         ))}
+      </View>
+      <View className="mx-auto mt-4">
         {selectedImages.length < 4 && (
-          <TouchableOpacity
-            onPress={pickImage}
-            className="w-24 h-24 bg-gray-200 rounded-lg justify-center items-center"
-          >
-            <Text className="text-gray-500 text-lg">+</Text>
-          </TouchableOpacity>
+          <View className="flex-row space-x-4">
+            <TouchableOpacity
+              onPress={pickImageFromCamera}
+              className="w-24 h-24 bg-gray-200 rounded-lg justify-center items-center"
+            >
+              <Text className="text-gray-500 text-lg">
+                <MaterialCommunityIcons name="camera" size={30} color="gray" />
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={pickImageFromGallery}
+              className="w-24 h-24 bg-gray-200 rounded-lg justify-center items-center"
+            >
+              <MaterialCommunityIcons name="upload" size={30} color="gray" />
+            </TouchableOpacity>
+          </View>
         )}
+        <Text className="text-sm mt-2 text-gray-400 font-base">
+          (Upload maximum 4 photos.)
+        </Text>
       </View>
     </View>
   );
