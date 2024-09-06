@@ -1,16 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Switch } from "react-native";
 
-const StepContent2: React.FC = () => {
+interface StepContent2Props {
+  setIsStep2Valid: (isValid: boolean) => void;
+}
+
+const StepContent2: React.FC<StepContent2Props> = ({ setIsStep2Valid }) => {
   const [isMetric, setIsMetric] = useState(true); // true for CM, false for IN
+  const [description, setDescription] = useState("");
+  const [height, setHeight] = useState("");
+  const [width, setWidth] = useState("");
+  const [depth, setDepth] = useState("");
+  const [email, setEmail] = useState("");
 
   const toggleSwitch = () => setIsMetric((previousState) => !previousState);
+
+  // Check if all inputs are filled
+  useEffect(() => {
+    if (description && height && width && depth && email) {
+      setIsStep2Valid(true); // All fields are filled
+    } else {
+      setIsStep2Valid(false); // Not all fields are filled
+    }
+  }, [description, height, width, depth, email]);
+
   return (
     <View>
       <Text className="text-lg font-semibold">Description</Text>
       <TextInput
         className="border border-gray-300 rounded-md p-2 my-4"
         placeholder="Enter here..."
+        value={description}
+        onChangeText={setDescription}
       />
 
       <Text className="text-lg font-semibold">Dimensions</Text>
@@ -49,6 +70,8 @@ const StepContent2: React.FC = () => {
         <TextInput
           className="border border-gray-300 w-[80%] rounded-md p-2"
           placeholder="Enter height..."
+          value={height}
+          onChangeText={setHeight}
         />
       </View>
       <View className="flex-row justify-between items-center my-4">
@@ -56,6 +79,8 @@ const StepContent2: React.FC = () => {
         <TextInput
           className="border border-gray-300 rounded-md p-2 w-[80%]"
           placeholder="Enter width..."
+          value={width}
+          onChangeText={setWidth}
         />
       </View>
       <View className="flex-row justify-between items-center my-4">
@@ -63,6 +88,8 @@ const StepContent2: React.FC = () => {
         <TextInput
           className="border border-gray-300 w-[80%] rounded-md p-2"
           placeholder="Enter depth..."
+          value={depth}
+          onChangeText={setDepth}
         />
       </View>
       <View className="my-4">
@@ -71,6 +98,8 @@ const StepContent2: React.FC = () => {
           <TextInput
             className="border border-gray-300 w-full rounded-md p-2"
             placeholder="Enter email..."
+            value={email}
+            onChangeText={setEmail}
           />
           <Text className="text-sm mt-2 text-gray-400 font-base">
             (Your email address based on your login)

@@ -18,6 +18,9 @@ const ConsignStep: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
 
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [isStep2Valid, setIsStep2Valid] = useState(false); // Track Step 2 validity
+
   // Handle navigation between steps
   const goNext = () => {
     if (currentStep === 2) {
@@ -69,7 +72,7 @@ const ConsignStep: React.FC = () => {
             {index < 2 && (
               <Text
                 key={`arrow-${index}`}
-                className="mx-2 text-gray-700 text-3xl font-semibold"
+                className="ml-6 text-gray-700 text-3xl font-semibold"
               >
                 {">"}
               </Text>
@@ -80,8 +83,15 @@ const ConsignStep: React.FC = () => {
 
       {/* Step Content */}
       <ScrollView className="flex-1">
-        {currentStep === 1 && <StepContent1 />}
-        {currentStep === 2 && <StepContent2 />}
+        {currentStep === 1 && (
+          <StepContent1
+            selectedImages={selectedImages}
+            setSelectedImages={setSelectedImages}
+          />
+        )}
+        {currentStep === 2 && (
+          <StepContent2 setIsStep2Valid={setIsStep2Valid} />
+        )}
         {currentStep === 3 && <StepContent3 />}
       </ScrollView>
 
@@ -101,9 +111,19 @@ const ConsignStep: React.FC = () => {
             </TouchableOpacity>
           )}
 
+          {/* Disable Next button if Step 2 is invalid */}
           <TouchableOpacity
             onPress={goNext}
-            className="py-3 px-8 w-[45%] flex-row justify-center rounded-lg bg-blue-500"
+            className={`py-3 px-8 w-[45%] flex-row justify-center rounded-lg ${
+              (currentStep === 1 && selectedImages.length === 0) ||
+              (currentStep === 2 && !isStep2Valid)
+                ? "bg-gray-300"
+                : "bg-blue-500"
+            }`}
+            disabled={
+              (currentStep === 1 && selectedImages.length === 0) ||
+              (currentStep === 2 && !isStep2Valid)
+            }
           >
             <Text className="text-white text-lg font-semibold">
               {currentStep === 3 ? "Finish" : "Next"}
